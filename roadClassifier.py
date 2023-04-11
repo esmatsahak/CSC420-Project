@@ -41,7 +41,7 @@ def markRoadPixels(directory, road_dict):
         for i in road_dict[key]:
             road_idx = np.where(segments == i)
             image[road_idx] = [0, 255, 0]
-        cv.imwrite(f'outputs/{key}.jpg', image)
+        cv.imwrite(f'outputs/road/{key}.jpg', image)
 
 if __name__ == '__main__':
     # Read train and test features
