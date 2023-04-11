@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import json
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report    
 from skimage.segmentation import slic
@@ -62,6 +63,10 @@ if __name__ == '__main__':
     idx = np.nonzero(test_labels)
     road_ids = test_ids[idx]
     road_dict = getRoadDict(road_ids)
+
+    # Save road dictionary to json file
+    with open('outputs/road_dict.json', 'w') as fp:
+        json.dump(road_dict, fp)
     
     # Mark road pixels in test images
     directory = 'data/test/image_left/'
