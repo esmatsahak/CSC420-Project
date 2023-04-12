@@ -21,12 +21,12 @@ def processAnnotations(directory):
         occlusion_values = label['occlusion'].T
         orientation_values = label['orient']
         for i in range(bbox_values.shape[0]):
-            if class_values[i,0][0] != 'Car' or truncation_values[i,0][0] > 0.3 or occlusion_values[i,0][0] > 0.2:
+            if class_values[i,0][0] != 'Car' or truncation_values[i,0][0] > 0.3 or occlusion_values[i,0][0] > 2:
                 continue
             left, top, width, height = bbox_values[i]
             left, top, width, height = int(left), int(top), int(width), int(height)
-            car = cv.cvtColor(image[top:top+height, left:left+width], cv.COLOR_BGR2GRAY)
-            gt = round(orientation_values[i][0]) % 12
+            car = image[top:top+height, left:left+width]
+            gt = round(orientation_values[i][0]/30) % 12
             cars.append(car)
             gts.append(gt)
             heights.append(height)
@@ -41,7 +41,7 @@ def extractFeatures(cars, heights, widths):
     # print(avg_width)
     features = []
     for i in range(len(cars)):
-        cars[i] = cv.resize(cars[i], (avg_width, avg_height))
+        cars[i] = cv.resize(cars[i], (avg_height, avg_width))
         feat_vec = hog(cars[i])
         features.append(feat_vec)
     return features
