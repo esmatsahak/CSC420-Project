@@ -33,7 +33,7 @@ def object_detection_api(directory, threshold=0.5, rect_th=2, text_size=1, text_
         img = cv2.imread(img_path) 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) 
         for i in range(len(boxes)):
-            if pred_cls[i] in ['car', 'bus', 'truck', 'train']:
+            if pred_cls[i] == 'car':
                 cv2.rectangle(img, (int(boxes[i][0][0]), int(boxes[i][0][1])), (int(boxes[i][1][0]), int(boxes[i][1][1])), color=(0,255,0), thickness=rect_th) 
                 # cv2.putText(img,pred_cls[i], (int(boxes[i][0][0]), int(boxes[i][0][1])), cv2.FONT_HERSHEY_SIMPLEX, text_size, (0,255,0), thickness=text_th) 
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
