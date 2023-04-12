@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 import os
 
 # Function to get the bounding boxes and labels of detected objects
-def get_prediction(img_path, threshold):
+def get_prediction(img_path, threshold, model, categories):
     img = Image.open(img_path)
     transform = T.Compose([T.ToTensor()])
     img = transform(img)
     pred = model([img])
-    pred_class = [COCO_INSTANCE_CATEGORY_NAMES[i] for i in list(pred[0]['labels'].numpy())]
+    pred_class = [categories[i] for i in list(pred[0]['labels'].numpy())]
     pred_boxes = [[(i[0], i[1]), (i[2], i[3])] for i in list(pred[0]['boxes'].detach().numpy())]
     pred_score = list(pred[0]['scores'].detach().numpy())
     pred_t = [pred_score.index(x) for x in pred_score if x>threshold]
@@ -25,11 +25,11 @@ def get_prediction(img_path, threshold):
     return pred_boxes, pred_class
 
 # Function to plot bounding boxes around cars in each test image
-def object_detection_api(directory, threshold=0.5, rect_th=2, text_size=1, text_th=1): 
+def object_detection_api(directory, model, categories, threshold=0.5, rect_th=2, text_size=1, text_th=1): 
     for filename in os.listdir(directory):
         # print(filename)
         img_path = directory + filename
-        boxes, pred_cls = get_prediction(img_path, threshold) 
+        boxes, pred_cls = get_prediction(img_path, threshold, model, categories) 
         img = cv2.imread(img_path) 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) 
         for i in range(len(boxes)):
@@ -47,4 +47,4 @@ if __name__ == "__main__":
 
     # Detect cars in test images
     directory = 'data/test/image_left/'
-    object_detection_api(directory)
+    object_detection_api(directory, model, COCO_INSTANCE_CATEGORY_NAMES)

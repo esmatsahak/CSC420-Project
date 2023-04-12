@@ -34,11 +34,7 @@ def processAnnotations(directory):
     return cars, gts, heights, widths
 
 # Function to extract features given bounding boxes
-def extractFeatures(cars, heights, widths):
-    avg_height = int(np.mean(heights))
-    avg_width = int(np.mean(widths))
-    # print(avg_height)
-    # print(avg_width)
+def extractFeatures(cars, avg_height, avg_width):
     features = []
     for i in range(len(cars)):
         cars[i] = cv.resize(cars[i], (avg_height, avg_width))
@@ -52,12 +48,18 @@ if __name__ == "__main__":
     # Get the bounding boxes and ground truths of all the images
     cars, gts, heights, widths = processAnnotations(directory)
 
+    # Calculate the average height and width of the bounding boxes
+    avg_height = int(np.mean(heights))
+    avg_width = int(np.mean(widths))
+    # print(avg_height)
+    # print(avg_width)
+
     # Extract features from the bounding boxes
-    features = extractFeatures(cars, heights, widths)
+    features = extractFeatures(cars, avg_height, avg_width)
     
     # Save the features and ground truths
-    np.save('outputs/features.npy', features)
-    np.save('outputs/gts.npy', gts)
+    # np.save('outputs/features.npy', features)
+    # np.save('outputs/gts.npy', gts)
 
     
 
