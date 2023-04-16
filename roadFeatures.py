@@ -4,12 +4,14 @@ import os
 import matplotlib.pyplot as plt
 from skimage.segmentation import slic, mark_boundaries
 from depth import computeDisparity, computeDepth, getCameraParams
+from skimage.measure import regionprops
+from plane import convert2DTo3D
 
 # COMPUTE FEATURES OF IMAGES
 # Features include:
-#   - Normalized centre (x,y) of segment
-#   - Mean colour (RGB) of segment
-#   - Mean depth (z) of segment
+#   - Centroid of segment (x,y)
+#   - RGB of centroid of segment (R,G,B)
+#   - 3D representation of centroid of segment (X,Y,Z)
 
 def getFeatures(mode):
     directory = f'data/{mode}/image_left'
@@ -43,30 +45,26 @@ def getFeatures(mode):
         depth = computeDepth(disparity, T, f)
 
         segments = slic(left_image, n_segments=1000, sigma=5)
+        regions = regionprops(segments)
 
         # plt.imshow(mark_boundaries(left_image, segments))
         # plt.show()
 
-        for i in range(0, np.amax(segments)+1):
-            id_3 = i
-            idx = np.where(segments == i)
-            depth_idx = cv.normalize(depth[idx], None, alpha=0, beta=1, norm_type=cv.NORM_MINMAX)
-            left_image_idx = left_image[idx]/255
-            idx_norm = [idx[0]/left_image.shape[0], idx[1]/left_image.shape[1]]
-
-            centre_norm = np.mean(idx_norm, axis=1)
-            mean_color = np.mean(left_image_idx, axis=0)
-            mean_depth = np.mean(depth_idx)
+        for region in regions:
+            id_3 = region.label
+            cx, cy = region.centroid
+            cz = depth[int(cx), int(cy)]
+            cX, cY, cZ = convert2DTo3D(cx, cy, cz, px, py, f)
+            B, G, R = left_image[int(cx), int(cy)]
 
             if mode == 'train':
-                centre = np.mean(idx, axis=1)
-                gt_centre = left_image_gt[int(centre[0]), int(centre[1])]
+                gt_centre = left_image_gt[int(cx), int(cy)]
                 label = 0
                 if gt_centre[0] == 255:
                     label = 1
-                feat_vec = np.array([id_1, id_2, id_3, centre_norm[0], centre_norm[1], mean_color[0], mean_color[1], mean_color[2], mean_depth, label])
+                feat_vec = np.array([id_1, id_2, id_3, cx, cy, R, G, B, cX, cY, cZ, label])
             else:
-                feat_vec = np.array([id_1, id_2, id_3, centre_norm[0], centre_norm[1], mean_color[0], mean_color[1], mean_color[2], mean_depth])
+                feat_vec = np.array([id_1, id_2, id_3, cx, cy, R, G, B, cX, cY, cZ])
             
             features.append(feat_vec)
     
@@ -74,7 +72,6 @@ def getFeatures(mode):
 
 if __name__ == "__main__":
     train_features = getFeatures('train')
-    # print()
     test_features = getFeatures('test')
 
     np.savetxt('outputs/train_features.csv', train_features, delimiter=',')

@@ -28,7 +28,7 @@ if __name__ == '__main__':
     for i, filename in enumerate(os.listdir(directory)):
         # Load image
         image_id = filename.split(".")[0]
-        print(image_id)
+        # print(image_id)
         img_path = f"data/test/image_left/{image_id}.jpg"
         left_image = cv.imread(img_path)
         right_image = cv.imread(f"data/test/image_right/{image_id}.jpg")

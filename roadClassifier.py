@@ -50,10 +50,10 @@ if __name__ == '__main__':
 
     # Split features into ids, input and labels
     train_ids = train_features[:, 0:3]
-    train_input = train_features[:, 3:9]
-    train_labels = train_features[:, 9]
+    train_input = train_features[:, 3:11]
+    train_labels = train_features[:, -1]
     test_ids = test_features[:, 0:3]
-    test_input = test_features[:, 3:9]
+    test_input = test_features[:, 3:]
 
     # Train MLP classifier and predict test labels
     mlp = MLPClassifier()
