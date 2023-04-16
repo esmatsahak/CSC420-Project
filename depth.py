@@ -13,12 +13,15 @@ def computeDepth(disparity_map, T, f):
     depth = np.divide(f * T, disparity_map, where=disparity_map!=0)
     return depth
 
+# Get camera parameters from calibration file
 def getCameraParams(calib_file):
     with open(calib_file) as f:
         line = f.readlines()[1].split()
         f = float(line[1])
         T = -float(line[4])/f 
-    return f, T
+        px = float(line[3])
+        py = float(line[7])
+    return f, T, px, py
 
 if __name__ == "__main__":
     # Image ID
@@ -26,7 +29,7 @@ if __name__ == "__main__":
 
     # Camera parameters (from calibration file)
     calib_file = f'data/train/calib/{image_id}.txt'
-    f, T = getCameraParams(calib_file)
+    f, T, px, py = getCameraParams(calib_file)
 
     # Read images
     image_left = cv.imread(f'data/train/image_left/{image_id}.jpg', cv.IMREAD_GRAYSCALE)

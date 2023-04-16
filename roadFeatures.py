@@ -38,7 +38,7 @@ def getFeatures(mode):
         gray_left_image = cv.cvtColor(left_image, cv.COLOR_BGR2GRAY)
         gray_right_image = cv.cvtColor(right_image, cv.COLOR_BGR2GRAY)
 
-        f, T = getCameraParams(calib_file)
+        f, T, px, py = getCameraParams(calib_file)
         disparity = computeDisparity(gray_left_image, gray_right_image, 64, 9, 1)
         depth = computeDepth(disparity, T, f)
 
