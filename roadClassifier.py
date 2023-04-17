@@ -2,14 +2,16 @@ import cv2 as cv
 import numpy as np
 import json
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report    
+from sklearn.metrics import classification_report  
+from sklearn.model_selection import train_test_split  
 from skimage.segmentation import slic
 
 # Function to train classifier and predict test labels
 def classifier(clf, train_input, train_labels, test_input):
-    clf.fit(train_input, train_labels)
-    train_output = clf.predict(train_input)
-    print(classification_report(train_labels, train_output))
+    X_train, X_test, y_train, y_test = train_test_split(train_input, train_labels, test_size=0.2, random_state=42)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    print(classification_report(y_test, y_pred))
     test_output = clf.predict(test_input)
     return test_output
 
