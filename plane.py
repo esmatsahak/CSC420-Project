@@ -63,18 +63,19 @@ def plot3DPoints(points, plane):
     pt_y = np.linspace(min_y, max_y, 100)
     pt_X, pt_Y = np.meshgrid(pt_x, pt_y)
     pt_Z = m_x*pt_X + m_y*pt_Y + b
-    ax.plot_surface(pt_X, pt_Y, pt_Z, alpha=0.2)
+    ax.plot_surface(pt_X, pt_Y, pt_Z, alpha=0.4, color='purple')
     return ax
 
 if __name__ == "__main__":
     directory = "data/test/image_left/"
+    inlier_percentages = []
 
     # Iterate through all test images
     for filename in os.listdir(directory):
         if filename.endswith(".jpg"):
             # Load test image
             image_id = filename.split(".")[0]
-            # print(image_id)
+            print(image_id)
             left_image = cv.imread(f"data/test/image_left/{image_id}.jpg")
             right_image = cv.imread(f"data/test/image_right/{image_id}.jpg")
 
@@ -91,10 +92,11 @@ if __name__ == "__main__":
             
             # Get best plane that fits the road points
             plane, inlier_count = getBestPlane(road_points)
-            # print(inlier_count)
-            # print(plane)
+            inlier_percentages.append(inlier_count/len(road_points))
 
             # Plot 3D points and plane
             ax = plot3DPoints(road_points, plane)
             plt.savefig(f"outputs/planes/{image_id}.jpg")
             plt.close()
+    
+    print("Average inlier percentage:", np.mean(inlier_percentages))
