@@ -1,5 +1,5 @@
 # CSC420-Project
-This repo contains the code for for CSC420 Winter 2023 Project 2. Data used can be found under `data` and outputs from the code is stored under `outputs`.
+This repo contains the code for for CSC420 Winter 2023 Project 2. Data used can be found under `data` and outputs from the code are stored under `outputs`.
 A description of the files that contain code to hand-in with their corresponding objectives is as follows:   
 
 ### Disparity and Depth Maps
