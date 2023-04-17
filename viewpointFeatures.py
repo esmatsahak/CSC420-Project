@@ -11,7 +11,7 @@ def processAnnotations(directory):
     heights = []
     widths = []
     for filename in os.listdir(directory):
-        # print(filename)
+        print(filename)
         image_id = filename.split('.')[0]
         label = loadmat('data/train_angle/labels/' + image_id + '.mat')['annotation'][0,0]
         image = cv.imread(directory + filename)
@@ -51,15 +51,15 @@ if __name__ == "__main__":
     # Calculate the average height and width of the bounding boxes
     avg_height = int(np.mean(heights))
     avg_width = int(np.mean(widths))
-    # print(avg_height)
-    # print(avg_width)
+    print(avg_height)
+    print(avg_width)
 
     # Extract features from the bounding boxes
     features = extractFeatures(cars, avg_height, avg_width)
     
     # Save the features and ground truths
-    # np.save('outputs/features.npy', features)
-    # np.save('outputs/gts.npy', gts)
+    np.save('outputs/features.npy', features)
+    np.save('outputs/gts.npy', gts)
 
     
 
