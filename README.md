@@ -20,7 +20,7 @@ The final trained model can be found under `outputs/best_metric_model_final.pth`
 * `objectDetection.py` uses a pre-trained model to detect cars in an image and visualizes results with 2D bounding boxes. 
 
 ### Viewpoint Classifier 
-* `viewpointFeatures.py` and `viewpointClassifier.py` train a classifier to determine the car orientation (viewpoint). 
+* `viewpointFeatures.py` extracts HoG descriptors used as features by the MLP classifier in `viewpointClassifier.py` to determine the car orientation (viewpoint). 
 * `visualization.py` visualizes the resulting predictions with viewpoint vectors.
 
 ### 3D Bounding Box
